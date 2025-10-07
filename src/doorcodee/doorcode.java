@@ -43,9 +43,15 @@ public class doorcode {
         JButton emptyButton = new JButton("");
         emptyButton.setEnabled(false);
         frame.add(emptyButton, gbc);
-
-
-        }
+        
+     // window settings
+        frame.setSize(300, 400);
+        frame.setLocationRelativeTo(null); // center
+        frame.setVisible(true); // show window
+        
+        
+        
+    }      
 	}
-
+	
 
