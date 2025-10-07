@@ -5,10 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class doorcode {
+	
+	private static JLabel displayLabel; // place to show numbers in the window
+    private static StringBuilder displayText = new StringBuilder(); // save pressed numbers
+	
 	public static void main(String[] args) {
 
 		// make window
-		JFrame frame = new JFrame("Код двери");
+		JFrame frame = new JFrame("Door-code");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
