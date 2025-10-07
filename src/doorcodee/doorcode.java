@@ -26,6 +26,11 @@ public class doorcode {
                 button.addActionListener(e -> System.out.println("Выбрано: " + number)); // output number
             }
             frame.add(button);
+            
+         // window settings
+            frame.setSize(300, 400);
+            frame.setLocationRelativeTo(null); // center
+            frame.setVisible(true); // show window
         }
 	}
 
