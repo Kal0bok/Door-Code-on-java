@@ -21,7 +21,7 @@ public class doorcode {
         
         JDialog dialog = new JDialog((Frame)null, title, true);
         
-        //tittle 
+      //tittle 
         JTextArea textArea = new JTextArea(message);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
@@ -29,16 +29,7 @@ public class doorcode {
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         dialog.add(new JScrollPane(textArea), BorderLayout.NORTH);
         
-        //panel with buttons
-        Jpanel buttonPanel = new JPanel(new GridLayout(3, 3, 7, 7));
-        for (String option : options) {
-            JButton button = new JButton(option);
-            button.addActionListener(e -> {
-                selected[0] = option;
-                dialog.dispose();  
-            });
-            buttonPanel.add(button);
-        }
+        
         
 	}
 	
