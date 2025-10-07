@@ -48,8 +48,18 @@ public class doorcode {
         frame.setSize(300, 400);
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
-        
-        
+	}
+	
+        private static JButton createButton(String number) {
+            JButton button = new JButton(number);
+            if (number.isEmpty()) {
+                button.setEnabled(false); // empty cell disabled
+            } else if (number.equals("Cancel")) {
+                button.addActionListener(e -> System.exit(0)); // close if press Cancel
+            } else {
+                button.addActionListener(e -> System.out.println("Выбрано: " + number)); // show number in console
+            }
+            return button;
         
     }      
 	}
