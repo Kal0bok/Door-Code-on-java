@@ -20,6 +20,24 @@ public class doorcode {
      // array with numbers, space and cancel
         String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "", "0", "Cancel"};
      
+     // buttons with custom place
+        // first column: 7, 4, 1
+        gbc.gridx = 0; gbc.gridy = 0; frame.add(createButton("7"), gbc);
+        gbc.gridx = 0; gbc.gridy = 1; frame.add(createButton("4"), gbc);
+        gbc.gridx = 0; gbc.gridy = 2; frame.add(createButton("1"), gbc);
+
+        // second column: 8, 5, 2, 0
+        gbc.gridx = 1; gbc.gridy = 0; frame.add(createButton("8"), gbc);
+        gbc.gridx = 1; gbc.gridy = 1; frame.add(createButton("5"), gbc);
+        gbc.gridx = 1; gbc.gridy = 2; frame.add(createButton("2"), gbc);
+        gbc.gridx = 1; gbc.gridy = 3; frame.add(createButton("0"), gbc);
+
+        // third column: 9, 6, 3, Cancel
+        gbc.gridx = 2; gbc.gridy = 0; frame.add(createButton("9"), gbc);
+        gbc.gridx = 2; gbc.gridy = 1; frame.add(createButton("6"), gbc);
+        gbc.gridx = 2; gbc.gridy = 2; frame.add(createButton("3"), gbc);
+        gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("Cancel"), gbc);
+
         }
 	}
 
