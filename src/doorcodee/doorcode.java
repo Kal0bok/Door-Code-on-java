@@ -25,21 +25,21 @@ public class doorcode {
      
      // buttons with custom place
         // first column: 7, 4, 1
-        gbc.gridx = 0; gbc.gridy = 0; frame.add(createButton("7"), gbc);
-        gbc.gridx = 0; gbc.gridy = 1; frame.add(createButton("4"), gbc);
-        gbc.gridx = 0; gbc.gridy = 2; frame.add(createButton("1"), gbc);
+        gbc.gridx = 0; gbc.gridy = 0; frame.add(createButton("7", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 1; frame.add(createButton("4", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 2; frame.add(createButton("1", buttonSize), gbc);
 
         // second column: 8, 5, 2, 0
-        gbc.gridx = 1; gbc.gridy = 0; frame.add(createButton("8"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; frame.add(createButton("5"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2; frame.add(createButton("2"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; frame.add(createButton("0"), gbc);
+        gbc.gridx = 1; gbc.gridy = 0; frame.add(createButton("8", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 1; frame.add(createButton("5", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 2; frame.add(createButton("2", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 3; frame.add(createButton("0", buttonSize), gbc);
 
         // third column: 9, 6, 3, Cancel
-        gbc.gridx = 2; gbc.gridy = 0; frame.add(createButton("9"), gbc);
-        gbc.gridx = 2; gbc.gridy = 1; frame.add(createButton("6"), gbc);
-        gbc.gridx = 2; gbc.gridy = 2; frame.add(createButton("3"), gbc);
-        gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("Cancel"), gbc);
+        gbc.gridx = 2; gbc.gridy = 0; frame.add(createButton("9", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 1; frame.add(createButton("6", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 2; frame.add(createButton("3", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("Cancel", buttonSize), gbc);
         
      // empty cell in first column, third row
         gbc.gridx = 0; gbc.gridy = 3;
