@@ -29,38 +29,9 @@ public class doorcode {
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         dialog.add(new JScrollPane(textArea), BorderLayout.NORTH);
         
-      //panel with buttons
-        Jpanel buttonPanel = new JPanel(new GridLayout(3, 3, 7, 7));
-        for (String option : options) {
-            JButton button = new JButton(option);
-            button.addActionListener(e -> {
-                selected[0] = option;
-                dialog.dispose();  
-            });
-            buttonPanel.add(button);
-            
-            //button cancel
-            JButton cancelButton = new JButton("Atcelt");
-            cancelButton.addActionListener(e -> {
-                selected[0] = null;
-                dialog.dispose();
-            });
-            buttonPanel.add(cancelButton);
-
-            dialog.add(buttonPanel, BorderLayout.CENTER);
-            
-            dialog.setSize(600, 250);  //make picture size
-            dialog.setLocationRelativeTo(null);  // center on the screen
-            dialog.setVisible(true);  // show
-
-            return selected[0];  // return choose or null
-        }
+      
         
 	}
-	
-	
-	
-	
 	
 	public static void main(String[] args) {
 
