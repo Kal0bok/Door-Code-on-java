@@ -45,6 +45,7 @@ public class doorcode {
         gbc.gridx = 0; gbc.gridy = 3;
         JButton emptyButton = new JButton("");
         emptyButton.setEnabled(false);
+        emptyButton.setPreferredSize(buttonSize);
         frame.add(emptyButton, gbc);
         
      // window settings
@@ -53,14 +54,15 @@ public class doorcode {
         frame.setVisible(true); // show window
 	}
 		//create a button
-        private static JButton createButton(String number) {
+        private static JButton createButton(String number, Dimension size) {
             JButton button = new JButton(number);
+            button.setPreferredSize(size); // set size
             if (number.isEmpty()) {
                 button.setEnabled(false); // empty cell disabled
             } else if (number.equals("Cancel")) {
                 button.addActionListener(e -> System.exit(0)); // close if press Cancel
             } else {
-                button.addActionListener(e -> System.out.println("Выбрано: " + number)); // show number in console
+                button.addActionListener(e -> System.out.println("Choose: " + number)); // show number in console
             }
             return button;
         
