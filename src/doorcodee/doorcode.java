@@ -21,8 +21,6 @@ public class doorcode {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 		
-     // array with numbers, space and cancel
-        String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "", "0", "Cancel"};
         
      // button size
         Dimension buttonSize = new Dimension(80, 80); // size for all buttons
