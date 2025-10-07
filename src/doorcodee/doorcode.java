@@ -53,14 +53,14 @@ public class doorcode {
         gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("Cancel", buttonSize), gbc);
         
      // empty cell in first column, third row
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0; gbc.gridy = 4;
         JButton emptyButton = new JButton("");
         emptyButton.setEnabled(false);
         emptyButton.setPreferredSize(buttonSize);
         frame.add(emptyButton, gbc);
         
      // window settings
-        frame.setSize(300, 400);
+        frame.setSize(300, 450);
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
@@ -71,9 +71,15 @@ public class doorcode {
             if (number.isEmpty()) {
                 button.setEnabled(false); // empty cell disabled
             } else if (number.equals("Cancel")) {
-                button.addActionListener(e -> System.exit(0)); // close if press Cancel
+                button.addActionListener(e -> {
+                    displayText.setLength(0); // clean text
+                    displayLabel.setText(" "); // clean place
+                }); // close if press Cancel
             } else {
-                button.addActionListener(e -> System.out.println("Choose: " + number)); // show number in console
+                button.addActionListener(e -> {
+                    displayText.append(number); // add number
+                    displayLabel.setText(displayText.toString()); // refresh place for numbers
+                }); // show number in window
             }
             return button;
         
