@@ -19,6 +19,9 @@ public class doorcode {
 		
      // array with numbers, space and cancel
         String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "", "0", "Cancel"};
+        
+     // button size
+        Dimension buttonSize = new Dimension(80, 80); // size for all buttons
      
      // buttons with custom place
         // first column: 7, 4, 1
@@ -49,7 +52,7 @@ public class doorcode {
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
-	
+		//create a button
         private static JButton createButton(String number) {
             JButton button = new JButton(number);
             if (number.isEmpty()) {
