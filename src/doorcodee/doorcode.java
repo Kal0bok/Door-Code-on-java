@@ -30,6 +30,9 @@ public class doorcode {
         
      // button size
         Dimension buttonSize = new Dimension(80, 80); // size for all buttons
+        
+     // reset gridwidth for buttons
+        gbc.gridwidth = 1;
      
      // buttons with custom place
         // first column: 7, 4, 1
