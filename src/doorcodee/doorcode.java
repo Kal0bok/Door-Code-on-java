@@ -38,6 +38,16 @@ public class doorcode {
                 dialog.dispose();  
             });
             buttonPanel.add(button);
+            
+            //button cancel
+            JButton cancelButton = new JButton("Atcelt");
+            cancelButton.addActionListener(e -> {
+                selected[0] = null;
+                dialog.dispose();
+            });
+            buttonPanel.add(cancelButton);
+
+            dialog.add(buttonPanel, BorderLayout.CENTER);
         }
         
 	}
