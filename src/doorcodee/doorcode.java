@@ -21,6 +21,12 @@ public class doorcode {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 		
+     // add text place to show numbers
+        displayLabel = new JLabel(" ", SwingConstants.CENTER);
+        displayLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        displayLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 3; // take 3 columns
+        frame.add(displayLabel, gbc);
         
      // button size
         Dimension buttonSize = new Dimension(80, 80); // size for all buttons
