@@ -1,9 +1,9 @@
 package doorcodee;
 
-import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
 
 	//input field validation
 public class doorcode {
