@@ -37,6 +37,13 @@ public class doorcode {
         gbc.gridx = 2; gbc.gridy = 1; frame.add(createButton("6"), gbc);
         gbc.gridx = 2; gbc.gridy = 2; frame.add(createButton("3"), gbc);
         gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("Cancel"), gbc);
+        
+     // empty cell in first column, third row
+        gbc.gridx = 0; gbc.gridy = 3;
+        JButton emptyButton = new JButton("");
+        emptyButton.setEnabled(false);
+        frame.add(emptyButton, gbc);
+
 
         }
 	}
