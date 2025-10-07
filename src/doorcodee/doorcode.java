@@ -48,6 +48,12 @@ public class doorcode {
             buttonPanel.add(cancelButton);
 
             dialog.add(buttonPanel, BorderLayout.CENTER);
+            
+            dialog.setSize(600, 250);  //make picture size
+            dialog.setLocationRelativeTo(null);  // center on the screen
+            dialog.setVisible(true);  // show
+
+            return selected[0];  // return choose or null
         }
         
 	}
