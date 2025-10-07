@@ -14,6 +14,19 @@ public class doorcode {
 		
      // array with numbers, space and cancel
         String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "", "Cancel"};
+        
+     // add buttons
+        for (String number : numbers) {
+            JButton button = new JButton(number);
+            if (number.isEmpty()) {
+                button.setEnabled(false); // empty cell disable
+            } else if (number.equals("Cancel")) {
+                button.addActionListener(e -> System.exit(0)); // close if press Cancel
+            } else {
+                button.addActionListener(e -> System.out.println("Выбрано: " + number)); // output number
+            }
+            frame.add(button);
+        }
 	}
 
 }
