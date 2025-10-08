@@ -21,7 +21,7 @@ public class doorcode {
         gbc.weighty = 1.0;
 		
      // add header label (title)
-        JLabel headerLabel = new JLabel("DIGITALas:", SwingConstants.LEFT);
+        JLabel headerLabel = new JLabel("DIGITALas", SwingConstants.LEFT);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 1; gbc.weightx = 1.0;
         frame.add(headerLabel, gbc);
@@ -37,6 +37,8 @@ public class doorcode {
         
      // button size
         Dimension buttonSize = new Dimension(80, 80); // size for all buttons
+        
+        Dimension wideButtonSize = new Dimension(170, 80); // size for wide button
         
      // button size
         Dimension buttonSizeBige = new Dimension(100, 100); // size for all buttons
@@ -71,8 +73,14 @@ public class doorcode {
         gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("Enter", buttonSizeBige), gbc);
         gbc.gridx = 3; gbc.gridy = 5; frame.add(createButton("Cancel", buttonSizeBige), gbc);
         
+     // new button in sixth row, between second and third columns
+        gbc.weightx = 1.0; // reset weight for new button
+        gbc.gridx = 1; gbc.gridy = 6; gbc.gridwidth = 2; // spans columns 1 and 2
+        frame.add(createButton("0", wideButtonSize), gbc); // wider button
+
+        
      // window settings
-        frame.setSize(380, 480);
+        frame.setSize(380, 540);// increased height for new row
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
