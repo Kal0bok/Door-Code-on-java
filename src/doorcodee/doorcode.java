@@ -25,6 +25,7 @@ public class doorcode {
         displayLabel = new JLabel(" ", SwingConstants.CENTER);
         displayLabel.setFont(new Font("Arial", Font.BOLD, 16));
         displayLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        displayLabel.setPreferredSize(new Dimension(320, 60)); // wider and taller
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 4; // take 4 columns
         frame.add(displayLabel, gbc);
         
@@ -60,7 +61,7 @@ public class doorcode {
         gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("1", buttonSize), gbc);
         
      // window settings
-        frame.setSize(380, 450);
+        frame.setSize(380, 480);
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
