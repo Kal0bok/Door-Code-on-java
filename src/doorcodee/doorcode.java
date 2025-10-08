@@ -35,10 +35,11 @@ public class doorcode {
         gbc.gridwidth = 1;
      
      // buttons with custom place
-        // first column: 7, 4, 1
+        // first column: 7, 4, 1, *
         gbc.gridx = 0; gbc.gridy = 1; frame.add(createButton("7", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 2; frame.add(createButton("4", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 3; frame.add(createButton("1", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 4; frame.add(createButton("*", buttonSize), gbc);
 
         // second column: 8, 5, 2, 0
         gbc.gridx = 1; gbc.gridy = 1; frame.add(createButton("8", buttonSize), gbc);
@@ -68,18 +69,16 @@ public class doorcode {
         private static JButton createButton(String number, Dimension size) {
             JButton button = new JButton(number);
             button.setPreferredSize(size); // set size
-            if (number.isEmpty()) {
-                button.setEnabled(false); // empty cell disabled
-            } else if (number.equals("Cancel")) {
+            if (number.equals("Cancel")) {
                 button.addActionListener(e -> {
                     displayText.setLength(0); // clean text
                     displayLabel.setText(" "); // clean place
-                }); // close if press Cancel
+                }); // clear if press Cancel
             } else {
                 button.addActionListener(e -> {
-                    displayText.append(number); // add number
+                    displayText.append(number); // add number or *
                     displayLabel.setText(displayText.toString()); // refresh place for numbers
-                }); // show number in window
+                }); // show number or * in window
             }
             return button;
         
