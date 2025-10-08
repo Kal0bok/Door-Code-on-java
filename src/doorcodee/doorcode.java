@@ -52,13 +52,13 @@ public class doorcode {
         gbc.gridx = 2; gbc.gridy = 1; frame.add(createButton("9", buttonSize), gbc);
         gbc.gridx = 2; gbc.gridy = 2; frame.add(createButton("6", buttonSize), gbc);
         gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("3", buttonSize), gbc);
-        gbc.gridx = 2; gbc.gridy = 4; frame.add(createButton("Cancel", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 4; frame.add(createButton("#", buttonSize), gbc);
         
      // fourth column: 1, 1, 1, 1
-        gbc.gridx = 3; gbc.gridy = 1; frame.add(createButton("1", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 2; frame.add(createButton("1", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 3; frame.add(createButton("1", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("1", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 1; frame.add(createButton("↑", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 2; frame.add(createButton("↓", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 3; frame.add(createButton("Enter", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("Cancel", buttonSize), gbc);
         
      // window settings
         frame.setSize(380, 480);
