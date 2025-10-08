@@ -25,7 +25,7 @@ public class doorcode {
         displayLabel = new JLabel(" ", SwingConstants.CENTER);
         displayLabel.setFont(new Font("Arial", Font.BOLD, 16));
         displayLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 3; // take 3 columns
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 4; // take 4 columns
         frame.add(displayLabel, gbc);
         
      // button size
@@ -53,15 +53,14 @@ public class doorcode {
         gbc.gridx = 2; gbc.gridy = 3; frame.add(createButton("3", buttonSize), gbc);
         gbc.gridx = 2; gbc.gridy = 4; frame.add(createButton("Cancel", buttonSize), gbc);
         
-     // empty cell in first column, third row
-        gbc.gridx = 0; gbc.gridy = 4;
-        JButton emptyButton = new JButton("");
-        emptyButton.setEnabled(false);
-        emptyButton.setPreferredSize(buttonSize);
-        frame.add(emptyButton, gbc);
+     // fourth column: 1, 1, 1, 1
+        gbc.gridx = 3; gbc.gridy = 1; frame.add(createButton("1", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 2; frame.add(createButton("1", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 3; frame.add(createButton("1", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("1", buttonSize), gbc);
         
      // window settings
-        frame.setSize(300, 450);
+        frame.setSize(380, 450);
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
