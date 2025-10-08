@@ -32,6 +32,9 @@ public class doorcode {
      // button size
         Dimension buttonSize = new Dimension(80, 80); // size for all buttons
         
+     // button size
+        Dimension buttonSizeBige = new Dimension(100, 100); // size for all buttons
+        
      // reset gridwidth for buttons
         gbc.gridwidth = 1;
      
@@ -55,13 +58,13 @@ public class doorcode {
         gbc.gridx = 2; gbc.gridy = 4; frame.add(createButton("#", buttonSize), gbc);
         
      // fourth column: 1, 1, 1, 1
-        gbc.gridx = 3; gbc.gridy = 1; frame.add(createButton("↑", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 2; frame.add(createButton("↓", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 3; frame.add(createButton("Enter", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("Cancel", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 1; frame.add(createButton("↑", buttonSizeBige), gbc);
+        gbc.gridx = 3; gbc.gridy = 2; frame.add(createButton("↓", buttonSizeBige), gbc);
+        gbc.gridx = 3; gbc.gridy = 3; frame.add(createButton("Enter", buttonSizeBige), gbc);
+        gbc.gridx = 3; gbc.gridy = 4; frame.add(createButton("Cancel", buttonSizeBige), gbc);
         
      // window settings
-        frame.setSize(380, 480);
+        frame.setSize(400, 500);
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
 	}
@@ -84,5 +87,3 @@ public class doorcode {
         
     }      
 	}
-
-
