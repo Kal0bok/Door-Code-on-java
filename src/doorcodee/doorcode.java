@@ -47,7 +47,7 @@ public class doorcode {
 
         // buttons with custom place
         // first column: 7, 4, 1, *
-        gbc.weightx = 0.5; // reduced weight for first column
+        gbc.weightx = 0.75; // reduced weight for first column
         gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(createButton("7", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 1; buttonPanel.add(createButton("4", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 2; buttonPanel.add(createButton("1", buttonSize), gbc);
