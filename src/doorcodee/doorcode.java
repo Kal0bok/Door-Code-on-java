@@ -121,6 +121,6 @@ public class doorcode {
                 displayLabel.setText(displayText.toString()); // refresh place for numbers
             }); // show number or symbol in window
         }
-        return button;
+        return button;//finished)
     }
 }
