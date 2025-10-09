@@ -18,11 +18,29 @@ public class doorcode {
         JPanel topPanel = new JPanel(new BorderLayout(5, 5));
         topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+        // create header panel for title and stripes
+        JPanel headerPanel = new JPanel(new BorderLayout(5, 0));
+        
         // add header label (title)
         JLabel headerLabel = new JLabel("DIGITALas:", SwingConstants.LEFT);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 16));
         headerLabel.setPreferredSize(new Dimension(100, 30)); // fixed size for header
-        topPanel.add(headerLabel, BorderLayout.NORTH);
+        headerPanel.add(headerLabel, BorderLayout.WEST);
+
+        // create panel for three horizontal stripes
+        JPanel stripesPanel = new JPanel(new GridLayout(3, 1, 0, 7)); // 3 rows, 1 column, 2px vertical gap
+        stripesPanel.setPreferredSize(new Dimension(50, 30)); // small width, height matches header
+        for (int i = 0; i < 3; i++) {
+            JLabel stripe = new JLabel();
+            stripe.setBackground(Color.BLACK);
+            stripe.setOpaque(true);
+            stripe.setPreferredSize(new Dimension(50, 5)); // small width, 5px height
+            stripesPanel.add(stripe);
+        }
+        headerPanel.add(stripesPanel, BorderLayout.EAST);
+
+        // add header panel to top panel
+        topPanel.add(headerPanel, BorderLayout.NORTH);
 
         // add text place to show numbers
         displayLabel = new JLabel(" ", SwingConstants.CENTER);
@@ -47,7 +65,7 @@ public class doorcode {
 
         // buttons with custom place
         // first column: 7, 4, 1, *
-        gbc.weightx = 0.75; // reduced weight for first column
+        gbc.weightx = 0.75; // slightly increased weight for first column
         gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(createButton("7", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 1; buttonPanel.add(createButton("4", buttonSize), gbc);
         gbc.gridx = 0; gbc.gridy = 2; buttonPanel.add(createButton("1", buttonSize), gbc);
@@ -83,7 +101,7 @@ public class doorcode {
         frame.add(buttonPanel, BorderLayout.CENTER);
 
         // window settings
-        frame.setSize(400, 540); // slightly wider window for balance
+        frame.setSize(400, 540); // height unchanged
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
     }
