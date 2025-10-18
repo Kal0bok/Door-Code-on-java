@@ -99,7 +99,7 @@ public class doorcode {
         // new button in fifth row, between second and third columns
         gbc.weightx = 1.0; // reset weight for new button
         gbc.gridx = 1; gbc.gridy = 4; gbc.gridwidth = 2; // spans columns 1 and 2
-        buttonPanel.add(createButton("0", wideButtonSize), gbc); // wider button
+        buttonPanel.add(logic.createButton("0", wideButtonSize), gbc); // wider button
 
         // add button panel to frame
         frame.add(buttonPanel, BorderLayout.CENTER);
