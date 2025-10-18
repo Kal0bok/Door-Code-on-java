@@ -15,27 +15,23 @@ public class doorcommand {
     private static StringBuilder displayText; // Reference to the display text
     private static boolean expectingSecondPart = false; // Flag for second part of door code
     private static StringBuilder secondPartText = new StringBuilder(); // Store second part of code
-    private static Timer timer; // Timer for apartment call delay
+    private static Timer apartmentTimer; // Timer for apartment call delay
+    private static Timer doorCodeTimer; // Timer for door code reset
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
         displayLabel = label;
         displayText = text;
         // Initialize timer for apartment call
-        timer = new Timer(TIMER_DELAY, e -> handleTimerAction());
-        timer.setRepeats(false); // Timer runs only once
+        apartmentTimer = new Timer(TIMER_DELAY, e -> handleApartmentTimerAction());
+        apartmentTimer.setRepeats(false); // Timer runs only once
+        // Initialize timer for door code reset
+        doorCodeTimer = new Timer(TIMER_DELAY, e -> handleDoorCodeTimerAction());
+        doorCodeTimer.setRepeats(false); // Timer runs only once
     }
 
-    // Create a button with specified text and size
-    public JButton createButton(String text, Dimension size) {
-        JButton button = new JButton(text);
-        button.setPreferredSize(size); // Set button size
-        button.addActionListener(e -> handleButtonAction(text)); // Attach action listener
-        return button;
-    }
-
-    // Handle timer action for apartment call
-    private void handleTimerAction() {
+    // Handle apartment timer action for apartment call
+    private void handleApartmentTimerAction() {
         String input = displayText.toString();
         try {
             int apartmentNumber = Integer.parseInt(input);
@@ -51,10 +47,29 @@ public class doorcommand {
         }
     }
 
+    // Handle door code timer action for reset
+    private void handleDoorCodeTimerAction() {
+        if (expectingSecondPart) {
+            displayText.setLength(0); // Clear first part text
+            secondPartText.setLength(0); // Clear second part text
+            expectingSecondPart = false; // Reset second part flag
+            displayLabel.setText(" "); // Clear the display
+        }
+    }
+
+    // Create a button with specified text and size
+    public JButton createButton(String text, Dimension size) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(size); // Set button size
+        button.addActionListener(e -> handleButtonAction(text)); // Attach action listener
+        return button;
+    }
+
     // Handle button actions
     private void handleButtonAction(String buttonText) {
-        // Stop timer on any button press
-        timer.stop();
+        // Stop both timers on any button press
+        apartmentTimer.stop();
+        doorCodeTimer.stop();
 
         if (buttonText.equals("Cancel")) {
             displayText.setLength(0); // Clear the text
@@ -101,6 +116,7 @@ public class doorcommand {
                 secondPartText.setLength(0); // Clear second part text
                 expectingSecondPart = true; // Set flag to expect second part
                 displayLabel.setText("----"); // Show four dashes
+                doorCodeTimer.restart(); // Start door code timer
             } else {
                 displayText.setLength(0); // Clear the text
                 displayLabel.setText("Access Denied"); // Show access denied message
@@ -115,13 +131,14 @@ public class doorcommand {
                     display.append("-");
                 }
                 displayLabel.setText(display.toString()); // Update display with current input and dashes
+                doorCodeTimer.restart(); // Restart door code timer
             }
         } else {
             // Handle regular input (first part, admin code, or apartment number)
             displayText.append(buttonText); // Append button text to display
             displayLabel.setText(displayText.toString()); // Update the display
-            // Start timer for apartment call
-            timer.restart();
+            // Start apartment timer for apartment call
+            apartmentTimer.restart();
         }
     }
 }
