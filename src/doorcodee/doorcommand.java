@@ -8,6 +8,15 @@ public class doorcommand {
     private static final String ADMIN_CODE = "000"; // Admin access code
     private static final String FIRST_PART_CODE = "07"; // First part of door code
     private static final String SECOND_PART_CODE = "0208"; // Second part of door code
+    private static final String CORRECT_KEY = "9?*6j1%@k0s^"; // Correct key for key menu
+    private static final String[] KEY_OPTIONS = {
+        CORRECT_KEY,
+        "k8#j2@9p5$m*", // Incorrect key 1
+        "3%q7v!t4&n0x", // Incorrect key 2
+        "a9^b5*k2@m1p", // Incorrect key 3
+        "z6$j9#r3%y8v", // Incorrect key 4
+        "4@p8^k1*n5!q"  // Incorrect key 5
+    }; // Key options for menu
     private static final int APARTMENT_MIN = 1; // Minimum apartment number
     private static final int APARTMENT_MAX = 70; // Maximum apartment number
     private static final int TIMER_DELAY = 5000; // Timer delay in milliseconds (5 seconds)
@@ -57,6 +66,38 @@ public class doorcommand {
         }
     }
 
+    // Show key selection menu and handle result
+    private void showKeyMenu() {
+        // Ask user if they want to use a key
+        int choice = JOptionPane.showConfirmDialog(null, 
+            "Use a key?", 
+            "Key Menu", 
+            JOptionPane.YES_NO_OPTION);
+        
+        if (choice == JOptionPane.YES_OPTION) {
+            // Show key options
+            String selectedKey = (String) JOptionPane.showInputDialog(null, 
+                "Select a key:", 
+                "Key Selection", 
+                JOptionPane.PLAIN_MESSAGE, 
+                null, 
+                KEY_OPTIONS, 
+                KEY_OPTIONS[0]);
+            
+            if (selectedKey != null) {
+                // Check if selected key is correct
+                if (selectedKey.equals(CORRECT_KEY)) {
+                    displayLabel.setText("Door Opened"); // Show door opened message
+                } else {
+                    displayLabel.setText("Invalid Key"); // Show invalid key message
+                }
+                displayText.setLength(0); // Clear the text
+                secondPartText.setLength(0); // Clear second part text
+                expectingSecondPart = false; // Reset second part flag
+            }
+        }
+    }
+
     // Create a button with specified text and size
     public JButton createButton(String text, Dimension size) {
         JButton button = new JButton(text);
@@ -70,6 +111,14 @@ public class doorcommand {
         // Stop both timers on any button press
         apartmentTimer.stop();
         doorCodeTimer.stop();
+
+        // Check if the wide zero button (bottom) is pressed
+        if (buttonText.equals("0") && !expectingSecondPart) {
+            // Check if the wide zero button is the one in the fifth row
+            // Since only the wide zero button is in the fifth row, we assume it's that one
+            showKeyMenu(); // Show key selection menu
+            return;
+        }
 
         if (buttonText.equals("Cancel")) {
             displayText.setLength(0); // Clear the text
