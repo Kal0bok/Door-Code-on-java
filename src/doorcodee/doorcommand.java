@@ -113,7 +113,7 @@ public class doorcommand {
         doorCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
-        if (buttonText.equals("0") && !expectingSecondPart) {
+        if (buttonText.equals("◯") && !expectingSecondPart) {
             // Check if the wide zero button is the one in the fifth row
             // Since only the wide zero button is in the fifth row, we assume it's that one
             showKeyMenu(); // Show key selection menu
