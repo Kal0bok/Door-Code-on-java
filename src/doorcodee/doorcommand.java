@@ -5,8 +5,12 @@ import java.awt.*;
 
 public class doorcommand {
     private static final String ADMIN_CODE = "000"; // Admin access code
+    private static final String FIRST_PART_CODE = "07"; // First part of door code
+    private static final String SECOND_PART_CODE = "0208"; // Second part of door code
     private static JLabel displayLabel; // Reference to the display label
     private static StringBuilder displayText; // Reference to the display text
+    private static boolean expectingSecondPart = false; // Flag for second part of code
+    private static StringBuilder secondPartText = new StringBuilder(); // Store second part of code
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
@@ -26,16 +30,54 @@ public class doorcommand {
     private void handleButtonAction(String buttonText) {
         if (buttonText.equals("Cancel")) {
             displayText.setLength(0); // Clear the text
+            secondPartText.setLength(0); // Clear second part text
+            expectingSecondPart = false; // Reset second part flag
             displayLabel.setText(" "); // Clear the display
         } else if (buttonText.equals("Enter")) {
-            // Check if the entered code matches the admin code
-            if (displayText.toString().equals(ADMIN_CODE)) {
-                displayLabel.setText("Admin Access Granted"); // Show admin access message
+            if (expectingSecondPart) {
+                // Check if second part of code is complete
+                if (secondPartText.toString().equals(SECOND_PART_CODE)) {
+                    displayLabel.setText("Door Opened"); // Show door opened message
+                } else {
+                    displayLabel.setText("ERROR"); // Show access denied message
+                }
+                displayText.setLength(0); // Clear the text
+                secondPartText.setLength(0); // Clear second part text
+                expectingSecondPart = false; // Reset second part flag
             } else {
+                // Check if admin code is entered
+                if (displayText.toString().equals(ADMIN_CODE)) {
+                    displayLabel.setText("Admin Access Granted"); // Show admin access message
+                    displayText.setLength(0); // Clear the text
+                } else {
+                    displayLabel.setText("ERROR"); // Show access denied message
+                    displayText.setLength(0); // Clear the text
+                }
+            }
+        } else if (buttonText.equals("*")) {
+            // Check if first part of code is correct
+            if (displayText.toString().equals(FIRST_PART_CODE)) {
+                displayText.setLength(0); // Clear first part text
+                secondPartText.setLength(0); // Clear second part text
+                expectingSecondPart = true; // Set flag to expect second part
+                displayLabel.setText("----"); // Show four dashes
+            } else {
+                displayText.setLength(0); // Clear the text
                 displayLabel.setText("ERROR"); // Show access denied message
             }
-            displayText.setLength(0); // Clear the text after checking
+        } else if (expectingSecondPart) {
+            // Handle input for second part of code
+            if (secondPartText.length() < 4) {
+                secondPartText.append(buttonText); // Append digit to second part
+                StringBuilder display = new StringBuilder(secondPartText.toString());
+                // Append remaining dashes
+                while (display.length() < 4) {
+                    display.append("-");
+                }
+                displayLabel.setText(display.toString()); // Update display with current input and dashes
+            }
         } else {
+            // Handle regular input (first part or admin code)
             displayText.append(buttonText); // Append button text to display
             displayLabel.setText(displayText.toString()); // Update the display
         }
