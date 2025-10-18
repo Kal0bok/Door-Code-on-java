@@ -113,9 +113,8 @@ public class doorcommand {
         doorCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
-        if (buttonText.equals("◯") && !expectingSecondPart) {
-            // Check if the wide zero button is the one in the fifth row
-            // Since only the wide zero button is in the fifth row, we assume it's that one
+        if (buttonText.equals("○") && !expectingSecondPart) {
+            // Assume wide zero button is in the fifth row
             showKeyMenu(); // Show key selection menu
             return;
         }
@@ -181,6 +180,18 @@ public class doorcommand {
                 }
                 displayLabel.setText(display.toString()); // Update display with current input and dashes
                 doorCodeTimer.restart(); // Restart door code timer
+                // Check if the full second part code is entered
+                if (secondPartText.length() == 4) {
+                    if (secondPartText.toString().equals(SECOND_PART_CODE)) {
+                        displayLabel.setText("Door Opened"); // Show door opened message
+                    } else {
+                        displayLabel.setText("Access Denied"); // Show access denied message
+                    }
+                    displayText.setLength(0); // Clear the text
+                    secondPartText.setLength(0); // Clear second part text
+                    expectingSecondPart = false; // Reset second part flag
+                    doorCodeTimer.stop(); // Stop the timer
+                }
             }
         } else {
             // Handle regular input (first part, admin code, or apartment number)
