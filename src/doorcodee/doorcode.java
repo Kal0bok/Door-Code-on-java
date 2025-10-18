@@ -2,13 +2,17 @@ package doorcodee;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class doorcode {
     private static JLabel displayLabel; // place to show numbers in the window
     private static StringBuilder displayText = new StringBuilder(); // save pressed numbers
-
+    private static doorcommand logic; // Logic handler
+    
     public static void main(String[] args) {
+    	
+    	// Initialize logic handler
+        logic = new doorcommand(displayLabel, displayText);
+        
         // make window
         JFrame frame = new JFrame("DOOR");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,34 +67,34 @@ public class doorcode {
         Dimension buttonSize = new Dimension(80, 80); // size for columns 0-2
         Dimension wideButtonSize = new Dimension(170, 80); // size for wide button
 
-        // buttons with custom place
-        // first column: 7, 4, 1, *
-        gbc.weightx = 0.75; // slightly increased weight for first column
-        gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(createButton("7", buttonSize), gbc);
-        gbc.gridx = 0; gbc.gridy = 1; buttonPanel.add(createButton("4", buttonSize), gbc);
-        gbc.gridx = 0; gbc.gridy = 2; buttonPanel.add(createButton("1", buttonSize), gbc);
-        gbc.gridx = 0; gbc.gridy = 3; buttonPanel.add(createButton("*", buttonSize), gbc);
+     // Buttons with custom placement
+        // First column: 7, 4, 1, *
+        gbc.weightx = 0.75; // Slightly increased weight for first column
+        gbc.gridx = 0; gbc.gridy = 0; buttonPanel.add(logic.createButton("7", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 1; buttonPanel.add(logic.createButton("4", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 2; buttonPanel.add(logic.createButton("1", buttonSize), gbc);
+        gbc.gridx = 0; gbc.gridy = 3; buttonPanel.add(logic.createButton("*", buttonSize), gbc);
 
-        // second column: 8, 5, 2, 0
-        gbc.weightx = 1.0; // normal weight for second column
-        gbc.gridx = 1; gbc.gridy = 0; buttonPanel.add(createButton("8", buttonSize), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; buttonPanel.add(createButton("5", buttonSize), gbc);
-        gbc.gridx = 1; gbc.gridy = 2; buttonPanel.add(createButton("2", buttonSize), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; buttonPanel.add(createButton("0", buttonSize), gbc);
+        // Second column: 8, 5, 2, 0
+        gbc.weightx = 1.0; // Normal weight for second column
+        gbc.gridx = 1; gbc.gridy = 0; buttonPanel.add(logic.createButton("8", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 1; buttonPanel.add(logic.createButton("5", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 2; buttonPanel.add(logic.createButton("2", buttonSize), gbc);
+        gbc.gridx = 1; gbc.gridy = 3; buttonPanel.add(logic.createButton("0", buttonSize), gbc);
 
-        // third column: 9, 6, 3, #
-        gbc.weightx = 1.0; // normal weight for third column
-        gbc.gridx = 2; gbc.gridy = 0; buttonPanel.add(createButton("9", buttonSize), gbc);
-        gbc.gridx = 2; gbc.gridy = 1; buttonPanel.add(createButton("6", buttonSize), gbc);
-        gbc.gridx = 2; gbc.gridy = 2; buttonPanel.add(createButton("3", buttonSize), gbc);
-        gbc.gridx = 2; gbc.gridy = 3; buttonPanel.add(createButton("#", buttonSize), gbc);
+        // Third column: 9, 6, 3, #
+        gbc.weightx = 1.0; // Normal weight for third column
+        gbc.gridx = 2; gbc.gridy = 0; buttonPanel.add(logic.createButton("9", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 1; buttonPanel.add(logic.createButton("6", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 2; buttonPanel.add(logic.createButton("3", buttonSize), gbc);
+        gbc.gridx = 2; gbc.gridy = 3; buttonPanel.add(logic.createButton("#", buttonSize), gbc);
 
-        // fourth column: ↑, ↓, Enter, Cancel
-        gbc.weightx = 2.0; // wider column
-        gbc.gridx = 3; gbc.gridy = 0; buttonPanel.add(createButton("↑", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 1; buttonPanel.add(createButton("↓", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 2; buttonPanel.add(createButton("Enter", buttonSize), gbc);
-        gbc.gridx = 3; gbc.gridy = 3; buttonPanel.add(createButton("Cancel", buttonSize), gbc);
+        // Fourth column: ↑, ↓, Enter, Cancel
+        gbc.weightx = 2.0; // Wider column
+        gbc.gridx = 3; gbc.gridy = 0; buttonPanel.add(logic.createButton("↑", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 1; buttonPanel.add(logic.createButton("↓", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 2; buttonPanel.add(logic.createButton("Enter", buttonSize), gbc);
+        gbc.gridx = 3; gbc.gridy = 3; buttonPanel.add(logic.createButton("Cancel", buttonSize), gbc);
 
         // new button in fifth row, between second and third columns
         gbc.weightx = 1.0; // reset weight for new button
@@ -104,23 +108,6 @@ public class doorcode {
         frame.setSize(400, 540); // height unchanged
         frame.setLocationRelativeTo(null); // center
         frame.setVisible(true); // show window
-    }
-
-    // create a button
-    private static JButton createButton(String number, Dimension size) {
-        JButton button = new JButton(number);
-        button.setPreferredSize(size); // set size
-        if (number.equals("Cancel")) {
-            button.addActionListener(e -> {
-                displayText.setLength(0); // clean text
-                displayLabel.setText(" "); // clean place
-            }); // clear if press Cancel
-        } else {
-            button.addActionListener(e -> {
-                displayText.append(number); // add number or symbol
-                displayLabel.setText(displayText.toString()); // refresh place for numbers
-            }); // show number or symbol in window
-        }
-        return button;//finished)
+    
     }
 }
