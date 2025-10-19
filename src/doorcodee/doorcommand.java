@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class doorcommand {
-    private static final String ADMIN_CODE = "#000#123#"; // Admin access code
+    private static String ADMIN_CODE = "#000#123#"; // Admin access code (mutable)
     private static final String FIRST_PART_CODE = "07"; // First part of door code
     private static final String SECOND_PART_CODE = "0208"; // Second part of door code
     private static final String CORRECT_KEY = "9?*6j1%@k0s^"; // Correct key for key menu
@@ -24,12 +24,13 @@ public class doorcommand {
     private static JLabel displayLabel; // Reference to the display label
     private static StringBuilder displayText; // Reference to the display text
     private static boolean expectingSecondPart = false; // Flag for second part of door code
-    private static boolean showingConfirmMenu = false; // Flag for confirm range change menu
+    private static boolean showingConfirmMenu = false; // Flag for admin menu
+    private static boolean showingAdminCodeConfirmMenu = false; // Flag for admin code change confirmation menu
     private static StringBuilder secondPartText = new StringBuilder(); // Store second part of code
     private static Timer apartmentTimer; // Timer for apartment call delay
     private static Timer doorCodeTimer; // Timer for door code reset
     private static Timer adminCodeTimer; // Timer for admin code reset
-    private static int confirmMenuSelectedIndex = 0; // 0 for Yes, 1 for No in confirm menu
+    private static int confirmMenuSelectedIndex = 0; // 0 for Change range, 1 for Change admin code, 2 for Yes, 3 for No in admin code confirm menu
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
@@ -81,12 +82,32 @@ public class doorcommand {
         displayLabel.setText(" "); // Clear the display
     }
 
-    // Show confirm menu for range change
+    // Show admin menu for selecting Change range or Change admin code
     private void showConfirmMenu() {
-        String[] options = {"Yes", "No"};
-        StringBuilder display = new StringBuilder("<html>Change range? ");
+        String[] options = {"Change range", "Change admin code"};
+        StringBuilder display = new StringBuilder("<html>");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex) {
+                display.append("<span style='display: inline-block; width: 150px; background-color: #ADD8E6; font-weight: bold;'>")
+                       .append(options[i])
+                       .append("</span>");
+            } else {
+                display.append("<span style='display: inline-block; width: 150px;'>")
+                       .append(options[i])
+                       .append("</span>");
+            }
+        }
+        display.append("</html>");
+        displayLabel.setText(display.toString()); // Show admin menu with selected option highlighted
+        showingConfirmMenu = true; // Set admin menu flag
+    }
+
+    // Show confirmation menu for changing admin code
+    private void showAdminCodeConfirmMenu() {
+        String[] options = {"Yes", "No"};
+        StringBuilder display = new StringBuilder("<html>Confirm admin code change? ");
+        for (int i = 0; i < options.length; i++) {
+            if (i == confirmMenuSelectedIndex - 2) { // Adjust index for Yes/No (2 for Yes, 3 for No)
                 display.append("<span style='display: inline-block; width: 100px; background-color: #ADD8E6; font-weight: bold;'>")
                        .append(options[i])
                        .append("</span>");
@@ -97,8 +118,18 @@ public class doorcommand {
             }
         }
         display.append("</html>");
-        displayLabel.setText(display.toString()); // Show confirm menu with selected option highlighted
-        showingConfirmMenu = true; // Set confirm menu flag
+        displayLabel.setText(display.toString()); // Show confirmation menu with selected option highlighted
+        showingAdminCodeConfirmMenu = true; // Set admin code confirm menu flag
+    }
+
+    // Validate new admin code format (#____#____#)
+    private boolean isValidAdminCode(String code) {
+        if (code.length() != 9) return false;
+        if (code.charAt(0) != '#' || code.charAt(4) != '#' || code.charAt(8) != '#') return false;
+        for (int i : new int[]{1, 2, 3, 5, 6, 7}) {
+            if (!Character.isDigit(code.charAt(i))) return false;
+        }
+        return !code.equals(ADMIN_CODE); // Ensure new code is different from current code
     }
 
     // Show key selection menu and handle result
@@ -149,7 +180,7 @@ public class doorcommand {
         adminCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
-        if (buttonText.equals("◯") && !expectingSecondPart && !showingConfirmMenu) {
+        if (buttonText.equals("◯") && !expectingSecondPart && !showingConfirmMenu && !showingAdminCodeConfirmMenu) {
             // Assume wide zero button is in the fifth row
             showKeyMenu(); // Show key selection menu
             return;
@@ -159,14 +190,37 @@ public class doorcommand {
             displayText.setLength(0); // Clear the text
             secondPartText.setLength(0); // Clear second part text
             expectingSecondPart = false; // Reset second part flag
-            showingConfirmMenu = false; // Reset confirm menu flag
-            confirmMenuSelectedIndex = 0; // Reset confirm menu selection
+            showingConfirmMenu = false; // Reset admin menu flag
+            showingAdminCodeConfirmMenu = false; // Reset admin code confirm menu flag
+            confirmMenuSelectedIndex = 0; // Reset menu selection
             displayLabel.setText(" "); // Clear the display
         } else if (buttonText.equals("Enter")) {
-            if (showingConfirmMenu) {
-                if (confirmMenuSelectedIndex == 0) { // Yes selected
-                    showingConfirmMenu = false; // Exit confirm menu
-                    confirmMenuSelectedIndex = 0; // Reset confirm menu selection
+            if (showingAdminCodeConfirmMenu) {
+                if (confirmMenuSelectedIndex == 2) { // Yes selected
+                    showingAdminCodeConfirmMenu = false; // Exit admin code confirm menu
+                    confirmMenuSelectedIndex = 0; // Reset menu selection
+                    // Prompt for new admin code
+                    String newAdminCode = JOptionPane.showInputDialog(null, 
+                        "Enter new admin code (#____#____#):", 
+                        "Set New Admin Code", 
+                        JOptionPane.PLAIN_MESSAGE);
+                    if (newAdminCode != null && isValidAdminCode(newAdminCode)) {
+                        ADMIN_CODE = newAdminCode; // Update admin code
+                        displayLabel.setText("Admin Code Changed"); // Show success message
+                    } else {
+                        displayLabel.setText("Invalid Admin Code Format or Same as Current"); // Show error message
+                    }
+                    displayText.setLength(0); // Clear the text
+                } else { // No selected
+                    displayText.setLength(0); // Clear the text
+                    showingAdminCodeConfirmMenu = false; // Reset admin code confirm menu flag
+                    confirmMenuSelectedIndex = 0; // Reset menu selection
+                    displayLabel.setText(" "); // Clear the display
+                }
+            } else if (showingConfirmMenu) {
+                if (confirmMenuSelectedIndex == 0) { // Change range selected
+                    showingConfirmMenu = false; // Exit admin menu
+                    confirmMenuSelectedIndex = 0; // Reset menu selection
                     // Prompt for new min and max range
                     String minInput = JOptionPane.showInputDialog(null, 
                         "Enter new min apartment number:", 
@@ -191,11 +245,10 @@ public class doorcommand {
                         displayLabel.setText("Invalid Range Input"); // Show error message
                     }
                     displayText.setLength(0); // Clear the text
-                } else { // No selected
-                    displayText.setLength(0); // Clear the text
-                    showingConfirmMenu = false; // Reset confirm menu flag
-                    confirmMenuSelectedIndex = 0; // Reset confirm menu selection
-                    displayLabel.setText(" "); // Clear the display
+                } else { // Change admin code selected
+                    showingConfirmMenu = false; // Exit admin menu
+                    confirmMenuSelectedIndex = 2; // Set to Yes in admin code confirm menu
+                    showAdminCodeConfirmMenu(); // Show admin code confirmation menu
                 }
             } else if (expectingSecondPart) {
                 // Check if second part of code is complete
@@ -213,6 +266,7 @@ public class doorcommand {
                 if (input.equals(ADMIN_CODE)) {
                     displayLabel.setText("Admin Access Granted"); // Show admin access message
                     displayText.setLength(0); // Clear the text
+                    showConfirmMenu(); // Show admin menu
                 } else {
                     try {
                         int apartmentNumber = Integer.parseInt(input);
@@ -230,14 +284,20 @@ public class doorcommand {
                 }
             }
         } else if (buttonText.equals("↑")) {
-            if (showingConfirmMenu) {
-                confirmMenuSelectedIndex = (confirmMenuSelectedIndex - 1 + 2) % 2; // Move to previous option (Yes/No)
-                showConfirmMenu(); // Update confirm menu display
+            if (showingAdminCodeConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex - 1 - 2 + 2) % 2 + 2; // Move between Yes (2) and No (3)
+                showAdminCodeConfirmMenu(); // Update admin code confirm menu display
+            } else if (showingConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex - 1 + 2) % 2; // Move between Change range (0) and Change admin code (1)
+                showConfirmMenu(); // Update admin menu display
             }
         } else if (buttonText.equals("↓")) {
-            if (showingConfirmMenu) {
-                confirmMenuSelectedIndex = (confirmMenuSelectedIndex + 1) % 2; // Move to next option (Yes/No)
-                showConfirmMenu(); // Update confirm menu display
+            if (showingAdminCodeConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex - 2 + 1) % 2 + 2; // Move between Yes (2) and No (3)
+                showAdminCodeConfirmMenu(); // Update admin code confirm menu display
+            } else if (showingConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex + 1) % 2; // Move between Change range (0) and Change admin code (1)
+                showConfirmMenu(); // Update admin menu display
             }
         } else if (buttonText.equals("*")) {
             // Check if first part of code is correct
@@ -283,8 +343,10 @@ public class doorcommand {
             if (!displayText.toString().equals(FIRST_PART_CODE)) {
                 apartmentTimer.restart();
             }
-            // Show confirm menu if full admin code is entered
+            // Show admin menu if full admin code is entered
             if (displayText.toString().equals(ADMIN_CODE)) {
+                displayLabel.setText("Admin Access Granted"); // Show admin access message
+                displayText.setLength(0); // Clear the text
                 showConfirmMenu();
             }
         }
