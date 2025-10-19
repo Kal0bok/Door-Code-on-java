@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class doorcommand {
-    private static final String ADMIN_CODE = "000"; // Admin access code
+    private static final String ADMIN_CODE = "#000#123#"; // Admin access code
     private static final String FIRST_PART_CODE = "07"; // First part of door code
     private static final String SECOND_PART_CODE = "0208"; // Second part of door code
     private static final String CORRECT_KEY = "9?*6j1%@k0s^"; // Correct key for key menu
@@ -26,6 +26,7 @@ public class doorcommand {
     private static StringBuilder secondPartText = new StringBuilder(); // Store second part of code
     private static Timer apartmentTimer; // Timer for apartment call delay
     private static Timer doorCodeTimer; // Timer for door code reset
+    private static Timer adminCodeTimer; // Timer for admin code reset
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
@@ -37,6 +38,9 @@ public class doorcommand {
         // Initialize timer for door code reset
         doorCodeTimer = new Timer(TIMER_DELAY, e -> handleDoorCodeTimerAction());
         doorCodeTimer.setRepeats(false); // Timer runs only once
+        // Initialize timer for admin code reset
+        adminCodeTimer = new Timer(TIMER_DELAY, e -> handleAdminCodeTimerAction());
+        adminCodeTimer.setRepeats(false); // Timer runs only once
     }
 
     // Handle apartment timer action for apartment call
@@ -64,6 +68,12 @@ public class doorcommand {
             expectingSecondPart = false; // Reset second part flag
             displayLabel.setText(" "); // Clear the display
         }
+    }
+
+    // Handle admin code timer action for reset
+    private void handleAdminCodeTimerAction() {
+        displayText.setLength(0); // Clear the text
+        displayLabel.setText(" "); // Clear the display
     }
 
     // Show key selection menu and handle result
@@ -108,9 +118,10 @@ public class doorcommand {
 
     // Handle button actions
     private void handleButtonAction(String buttonText) {
-        // Stop both timers on any button press
+        // Stop all timers on any button press
         apartmentTimer.stop();
         doorCodeTimer.stop();
+        adminCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
         if (buttonText.equals("◯") && !expectingSecondPart) {
@@ -163,7 +174,7 @@ public class doorcommand {
                 displayText.setLength(0); // Clear first part text
                 secondPartText.setLength(0); // Clear second part text
                 expectingSecondPart = true; // Set flag to expect second part
-                displayLabel.setText("- - - -"); // Show four dashes
+                displayLabel.setText("----"); // Show four dashes
                 doorCodeTimer.restart(); // Start door code timer
             } else {
                 displayText.setLength(0); // Clear the text
@@ -197,8 +208,14 @@ public class doorcommand {
             // Handle regular input (first part, admin code, or apartment number)
             displayText.append(buttonText); // Append button text to display
             displayLabel.setText(displayText.toString()); // Update the display
-            // Start apartment timer for apartment call
-            apartmentTimer.restart();
+            // Start apartment timer only if input is not the first part of door code
+            if (!displayText.toString().equals(FIRST_PART_CODE)) {
+                apartmentTimer.restart();
+            }
+            // Start admin code timer if full admin code is entered
+            if (displayText.toString().equals(ADMIN_CODE)) {
+                adminCodeTimer.restart();
+            }
         }
     }
 }
