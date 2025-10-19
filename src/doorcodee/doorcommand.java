@@ -113,7 +113,7 @@ public class doorcommand {
         doorCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
-        if (buttonText.equals("○") && !expectingSecondPart) {
+        if (buttonText.equals("◯") && !expectingSecondPart) {
             // Assume wide zero button is in the fifth row
             showKeyMenu(); // Show key selection menu
             return;
@@ -163,7 +163,7 @@ public class doorcommand {
                 displayText.setLength(0); // Clear first part text
                 secondPartText.setLength(0); // Clear second part text
                 expectingSecondPart = true; // Set flag to expect second part
-                displayLabel.setText("----"); // Show four dashes
+                displayLabel.setText("- - - -"); // Show four dashes
                 doorCodeTimer.restart(); // Start door code timer
             } else {
                 displayText.setLength(0); // Clear the text
