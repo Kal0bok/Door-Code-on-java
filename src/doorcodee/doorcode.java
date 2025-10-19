@@ -107,5 +107,5 @@ public class doorcode {
         frame.setSize(400, 540); // Fixed window size
         frame.setLocationRelativeTo(null); // Center the window
         frame.setVisible(true); // Show the window
-    }
+    }//finished
 }

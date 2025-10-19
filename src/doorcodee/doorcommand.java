@@ -2,7 +2,6 @@ package doorcodee;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class doorcommand {
     private static String ADMIN_CODE = "#000#123#"; // Admin access code (mutable)
