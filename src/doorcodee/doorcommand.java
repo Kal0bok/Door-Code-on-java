@@ -17,16 +17,19 @@ public class doorcommand {
         "z6$j9#r3%y8v", // Incorrect key 4
         "4@p8^k1*n5!q"  // Incorrect key 5
     }; // Key options for menu
-    private static final int APARTMENT_MIN = 1; // Minimum apartment number
-    private static final int APARTMENT_MAX = 70; // Maximum apartment number
+    private static int APARTMENT_MIN_RANGE = 1; // Minimum apartment number (mutable)
+    private static int APARTMENT_MAX_RANGE = 15; // Maximum apartment number (mutable)
+    private static final int MIN_RANGE_DIFFERENCE = 15; // Minimum allowed range difference
     private static final int TIMER_DELAY = 5000; // Timer delay in milliseconds (5 seconds)
     private static JLabel displayLabel; // Reference to the display label
     private static StringBuilder displayText; // Reference to the display text
     private static boolean expectingSecondPart = false; // Flag for second part of door code
+    private static boolean showingConfirmMenu = false; // Flag for confirm range change menu
     private static StringBuilder secondPartText = new StringBuilder(); // Store second part of code
     private static Timer apartmentTimer; // Timer for apartment call delay
     private static Timer doorCodeTimer; // Timer for door code reset
     private static Timer adminCodeTimer; // Timer for admin code reset
+    private static int confirmMenuSelectedIndex = 0; // 0 for Yes, 1 for No in confirm menu
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
@@ -41,6 +44,8 @@ public class doorcommand {
         // Initialize timer for admin code reset
         adminCodeTimer = new Timer(TIMER_DELAY, e -> handleAdminCodeTimerAction());
         adminCodeTimer.setRepeats(false); // Timer runs only once
+        // Enable HTML rendering for bold text
+        displayLabel.setText("<html></html>");
     }
 
     // Handle apartment timer action for apartment call
@@ -48,7 +53,7 @@ public class doorcommand {
         String input = displayText.toString();
         try {
             int apartmentNumber = Integer.parseInt(input);
-            if (apartmentNumber >= APARTMENT_MIN && apartmentNumber <= APARTMENT_MAX) {
+            if (apartmentNumber >= APARTMENT_MIN_RANGE && apartmentNumber <= APARTMENT_MAX_RANGE) {
                 displayLabel.setText("Calling Apartment " + apartmentNumber); // Show call message
                 displayText.setLength(0); // Clear the text
             } else {
@@ -74,6 +79,26 @@ public class doorcommand {
     private void handleAdminCodeTimerAction() {
         displayText.setLength(0); // Clear the text
         displayLabel.setText(" "); // Clear the display
+    }
+
+    // Show confirm menu for range change
+    private void showConfirmMenu() {
+        String[] options = {"Yes", "No"};
+        StringBuilder display = new StringBuilder("<html>Change range? ");
+        for (int i = 0; i < options.length; i++) {
+            if (i == confirmMenuSelectedIndex) {
+                display.append("<span style='display: inline-block; width: 100px; background-color: #ADD8E6; font-weight: bold;'>")
+                       .append(options[i])
+                       .append("</span>");
+            } else {
+                display.append("<span style='display: inline-block; width: 100px;'>")
+                       .append(options[i])
+                       .append("</span>");
+            }
+        }
+        display.append("</html>");
+        displayLabel.setText(display.toString()); // Show confirm menu with selected option highlighted
+        showingConfirmMenu = true; // Set confirm menu flag
     }
 
     // Show key selection menu and handle result
@@ -124,7 +149,7 @@ public class doorcommand {
         adminCodeTimer.stop();
 
         // Check if the wide zero button (bottom) is pressed
-        if (buttonText.equals("◯") && !expectingSecondPart) {
+        if (buttonText.equals("◯") && !expectingSecondPart && !showingConfirmMenu) {
             // Assume wide zero button is in the fifth row
             showKeyMenu(); // Show key selection menu
             return;
@@ -134,9 +159,45 @@ public class doorcommand {
             displayText.setLength(0); // Clear the text
             secondPartText.setLength(0); // Clear second part text
             expectingSecondPart = false; // Reset second part flag
+            showingConfirmMenu = false; // Reset confirm menu flag
+            confirmMenuSelectedIndex = 0; // Reset confirm menu selection
             displayLabel.setText(" "); // Clear the display
         } else if (buttonText.equals("Enter")) {
-            if (expectingSecondPart) {
+            if (showingConfirmMenu) {
+                if (confirmMenuSelectedIndex == 0) { // Yes selected
+                    showingConfirmMenu = false; // Exit confirm menu
+                    confirmMenuSelectedIndex = 0; // Reset confirm menu selection
+                    // Prompt for new min and max range
+                    String minInput = JOptionPane.showInputDialog(null, 
+                        "Enter new min apartment number:", 
+                        "Set Apartment Min Range", 
+                        JOptionPane.PLAIN_MESSAGE);
+                    String maxInput = JOptionPane.showInputDialog(null, 
+                        "Enter new max apartment number:", 
+                        "Set Apartment Max Range", 
+                        JOptionPane.PLAIN_MESSAGE);
+                    try {
+                        int newMinRange = Integer.parseInt(minInput);
+                        int newMaxRange = Integer.parseInt(maxInput);
+                        if (newMinRange >= 1 && newMaxRange >= newMinRange && 
+                            (newMaxRange - newMinRange) >= MIN_RANGE_DIFFERENCE) {
+                            APARTMENT_MIN_RANGE = newMinRange; // Update min apartment number
+                            APARTMENT_MAX_RANGE = newMaxRange; // Update max apartment number
+                            displayLabel.setText("Range set to " + newMinRange + "-" + newMaxRange); // Show success message
+                        } else {
+                            displayLabel.setText("Invalid Range: Min >= 1, Max >= Min, Difference >= " + MIN_RANGE_DIFFERENCE); // Show error message
+                        }
+                    } catch (NumberFormatException e) {
+                        displayLabel.setText("Invalid Range Input"); // Show error message
+                    }
+                    displayText.setLength(0); // Clear the text
+                } else { // No selected
+                    displayText.setLength(0); // Clear the text
+                    showingConfirmMenu = false; // Reset confirm menu flag
+                    confirmMenuSelectedIndex = 0; // Reset confirm menu selection
+                    displayLabel.setText(" "); // Clear the display
+                }
+            } else if (expectingSecondPart) {
                 // Check if second part of code is complete
                 if (secondPartText.toString().equals(SECOND_PART_CODE)) {
                     displayLabel.setText("Door Opened"); // Show door opened message
@@ -155,7 +216,7 @@ public class doorcommand {
                 } else {
                     try {
                         int apartmentNumber = Integer.parseInt(input);
-                        if (apartmentNumber >= APARTMENT_MIN && apartmentNumber <= APARTMENT_MAX) {
+                        if (apartmentNumber >= APARTMENT_MIN_RANGE && apartmentNumber <= APARTMENT_MAX_RANGE) {
                             displayLabel.setText("Calling Apartment " + apartmentNumber); // Show call message
                             displayText.setLength(0); // Clear the text
                         } else {
@@ -167,6 +228,16 @@ public class doorcommand {
                         displayText.setLength(0); // Clear the text
                     }
                 }
+            }
+        } else if (buttonText.equals("↑")) {
+            if (showingConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex - 1 + 2) % 2; // Move to previous option (Yes/No)
+                showConfirmMenu(); // Update confirm menu display
+            }
+        } else if (buttonText.equals("↓")) {
+            if (showingConfirmMenu) {
+                confirmMenuSelectedIndex = (confirmMenuSelectedIndex + 1) % 2; // Move to next option (Yes/No)
+                showConfirmMenu(); // Update confirm menu display
             }
         } else if (buttonText.equals("*")) {
             // Check if first part of code is correct
@@ -212,9 +283,9 @@ public class doorcommand {
             if (!displayText.toString().equals(FIRST_PART_CODE)) {
                 apartmentTimer.restart();
             }
-            // Start admin code timer if full admin code is entered
+            // Show confirm menu if full admin code is entered
             if (displayText.toString().equals(ADMIN_CODE)) {
-                adminCodeTimer.restart();
+                showConfirmMenu();
             }
         }
     }
