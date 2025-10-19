@@ -86,7 +86,8 @@ public class doorcommand {
 
     // Show admin menu for selecting Change range, Change admin code, or Change door access
     private void showConfirmMenu() {
-        String[] options = {"Change range", "Change admin code", "Change door access"};
+        String[] options = {"Change range                                     ", "                                                      "
+        		+ "                          Change admin code                              ", "                               Change door access"};
         StringBuilder display = new StringBuilder("<html>");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex) {
@@ -106,7 +107,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing admin code
     private void showAdminCodeConfirmMenu() {
-        String[] options = {"Yes", "No"};
+        String[] options = {"Yes                                       ", "                                                              No"};
         StringBuilder display = new StringBuilder("<html>Confirm admin code change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 3) { // Adjust for indices 3 (Yes), 4 (No)
@@ -126,7 +127,7 @@ public class doorcommand {
 
     // Show door access sub-menu for selecting Change door code or Change key
     private void showDoorAccessMenu() {
-        String[] options = {"Change door code", "Change key"};
+        String[] options = {"Change door code                                              ", "                                   Change key"};
         StringBuilder display = new StringBuilder("<html>");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 5) { // Adjust for indices 5 (Change door code), 6 (Change key)
@@ -146,7 +147,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing door code
     private void showDoorCodeConfirmMenu() {
-        String[] options = {"Yes", "No"};
+        String[] options = {"Yes                                                ", "                                     No"};
         StringBuilder display = new StringBuilder("<html>Confirm door code change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 7) { // Adjust for indices 7 (Yes), 8 (No)
@@ -166,7 +167,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing key
     private void showKeyConfirmMenu() {
-        String[] options = {"Yes", "No"};
+        String[] options = {"Yes                                  ", "                                      No"};
         StringBuilder display = new StringBuilder("<html>Confirm key change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 9) { // Adjust for indices 9 (Yes), 10 (No)
