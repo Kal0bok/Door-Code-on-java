@@ -32,11 +32,13 @@ public class doorcommand {
     private static Timer doorCodeTimer; // Timer for door code reset
     private static Timer adminCodeTimer; // Timer for admin code reset
     private static int confirmMenuSelectedIndex = 0; // Selected index for menus
+    private static doordialogue dialogueSystem;// Add dialogue system field
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
         displayLabel = label;
         displayText = text;
+        dialogueSystem = new doordialogue(); // Add this line
         // Initialize timer for apartment call
         apartmentTimer = new Timer(TIMER_DELAY, e -> handleApartmentTimerAction());
         apartmentTimer.setRepeats(false); // Timer runs only once
