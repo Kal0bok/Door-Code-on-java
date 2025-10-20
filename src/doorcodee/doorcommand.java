@@ -2,6 +2,8 @@ package doorcodee;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class doorcommand {
     private static String ADMIN_CODE = "#000#123#"; // Admin access code (mutable)
@@ -32,22 +34,41 @@ public class doorcommand {
     private static Timer doorCodeTimer; // Timer for door code reset
     private static Timer adminCodeTimer; // Timer for admin code reset
     private static int confirmMenuSelectedIndex = 0; // Selected index for menus
-    private static doordialogue dialogueSystem;// Add dialogue system field
+    private static doordialogue dialogueSystem; // Dialogue system for apartment calls
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
         displayLabel = label;
         displayText = text;
-        dialogueSystem = new doordialogue(); // Add this line
+        dialogueSystem = new doordialogue(); // Initialize dialogue system
+        
         // Initialize timer for apartment call
-        apartmentTimer = new Timer(TIMER_DELAY, e -> handleApartmentTimerAction());
+        apartmentTimer = new Timer(TIMER_DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleApartmentTimerAction();
+            }
+        });
         apartmentTimer.setRepeats(false); // Timer runs only once
+        
         // Initialize timer for door code reset
-        doorCodeTimer = new Timer(TIMER_DELAY, e -> handleDoorCodeTimerAction());
+        doorCodeTimer = new Timer(TIMER_DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleDoorCodeTimerAction();
+            }
+        });
         doorCodeTimer.setRepeats(false); // Timer runs only once
+        
         // Initialize timer for admin code reset
-        adminCodeTimer = new Timer(TIMER_DELAY, e -> handleAdminCodeTimerAction());
+        adminCodeTimer = new Timer(TIMER_DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleAdminCodeTimerAction();
+            }
+        });
         adminCodeTimer.setRepeats(false); // Timer runs only once
+        
         // Enable HTML rendering for bold text
         displayLabel.setText("<html></html>");
     }
@@ -87,8 +108,7 @@ public class doorcommand {
 
     // Show admin menu for selecting Change range, Change admin code, or Change door access
     private void showConfirmMenu() {
-        String[] options = {"Change range                                     ", "                                                      "
-        		+ "                          Change admin code                              ", "                               Change door access"};
+        String[] options = {"Change range", "Change admin code", "Change door access"};
         StringBuilder display = new StringBuilder("<html>");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex) {
@@ -108,7 +128,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing admin code
     private void showAdminCodeConfirmMenu() {
-        String[] options = {"Yes                                       ", "                                                              No"};
+        String[] options = {"Yes", "No"};
         StringBuilder display = new StringBuilder("<html>Confirm admin code change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 3) { // Adjust for indices 3 (Yes), 4 (No)
@@ -128,7 +148,7 @@ public class doorcommand {
 
     // Show door access sub-menu for selecting Change door code or Change key
     private void showDoorAccessMenu() {
-        String[] options = {"Change door code                                              ", "                                   Change key"};
+        String[] options = {"Change door code", "Change key"};
         StringBuilder display = new StringBuilder("<html>");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 5) { // Adjust for indices 5 (Change door code), 6 (Change key)
@@ -148,7 +168,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing door code
     private void showDoorCodeConfirmMenu() {
-        String[] options = {"Yes                                                ", "                                     No"};
+        String[] options = {"Yes", "No"};
         StringBuilder display = new StringBuilder("<html>Confirm door code change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 7) { // Adjust for indices 7 (Yes), 8 (No)
@@ -168,7 +188,7 @@ public class doorcommand {
 
     // Show confirmation menu for changing key
     private void showKeyConfirmMenu() {
-        String[] options = {"Yes                                  ", "                                      No"};
+        String[] options = {"Yes", "No"};
         StringBuilder display = new StringBuilder("<html>Confirm key change? ");
         for (int i = 0; i < options.length; i++) {
             if (i == confirmMenuSelectedIndex - 9) { // Adjust for indices 9 (Yes), 10 (No)
@@ -250,12 +270,26 @@ public class doorcommand {
     public JButton createButton(String text, Dimension size) {
         JButton button = new JButton(text);
         button.setPreferredSize(size); // Set button size
-        button.addActionListener(e -> handleButtonAction(text)); // Attach action listener
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleButtonAction(text);
+            }
+        }); // Attach action listener
         return button;
     }
 
     // Handle button actions
     private void handleButtonAction(String buttonText) {
+        // If dialogue is active, block other actions
+        if (dialogueSystem.isInDialogue() && !buttonText.equals("Cancel")) {
+            JOptionPane.showMessageDialog(null, 
+                "Please finish the current dialogue before using the panel", 
+                "Dialogue Active", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         // Stop all timers on any button press
         apartmentTimer.stop();
         doorCodeTimer.stop();
@@ -269,6 +303,7 @@ public class doorcommand {
         }
 
         if (buttonText.equals("Cancel")) {
+            dialogueSystem.forceEndDialogue(); // End any active dialogue
             displayText.setLength(0); // Clear the text
             secondPartText.setLength(0); // Clear second part text
             expectingSecondPart = false; // Reset second part flag
@@ -419,8 +454,20 @@ public class doorcommand {
                     try {
                         int apartmentNumber = Integer.parseInt(input);
                         if (apartmentNumber >= APARTMENT_MIN_RANGE && apartmentNumber <= APARTMENT_MAX_RANGE) {
-                            displayLabel.setText("Calling Apartment " + apartmentNumber); // Show call message
-                            displayText.setLength(0); // Clear the text
+                            // Instead of direct call, start dialogue
+                            if (!dialogueSystem.isInDialogue()) {
+                                displayLabel.setText("Calling Apartment " + apartmentNumber);
+                                displayText.setLength(0);
+                                // Start dialogue with a small timer for realism
+                                Timer callTimer = new Timer(1000, new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        dialogueSystem.startDialogue(apartmentNumber);
+                                    }
+                                });
+                                callTimer.setRepeats(false);
+                                callTimer.start();
+                            }
                         } else {
                             displayLabel.setText("Invalid Apartment Number"); // Show invalid message
                             displayText.setLength(0); // Clear the text
