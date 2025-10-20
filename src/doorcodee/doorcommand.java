@@ -38,9 +38,9 @@ public class doorcommand {
 
     // Constructor to initialize label and text references
     public doorcommand(JLabel label, StringBuilder text) {
-        displayLabel = label;
+    	displayLabel = label;
         displayText = text;
-        dialogueSystem = new doordialogue(); // Initialize dialogue system
+        dialogueSystem = new doordialogue(displayLabel); // Pass display label to dialogue system
         
         // Initialize timer for apartment call
         apartmentTimer = new Timer(TIMER_DELAY, new ActionListener() {
